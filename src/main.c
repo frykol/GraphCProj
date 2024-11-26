@@ -85,7 +85,7 @@ void setup() {
     vertexes[0].VBO = planeVBO;
     vertexes[0].VertexCount = sizeof(plane)/sizeof(plane[0])/5;
 
-    const char* filepath = "../src/test.txt";
+    const char* filepath = "../graph_data/test.txt";
     struct Buffer b = getBuffer(filepath);
     struct Point* points = readFile(&b);
     

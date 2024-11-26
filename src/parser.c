@@ -39,7 +39,7 @@ struct Point* readFile(struct Buffer* b) {
     struct Point* points = (struct Point*)malloc(b->numberOfPoints * sizeof(struct Point));
     char* token = NULL;
     char* nextToken = NULL;
-    token = strtok_s(b->buffer, " \n", &nextToken);
+    token = (char*)strtok_r(b->buffer, " \n", &nextToken);
 
     int count = 0;
     int idx = 0;
@@ -62,7 +62,7 @@ struct Point* readFile(struct Buffer* b) {
 			points[idx].b = cb;
             idx++;
         }
-        token = strtok_s(NULL, " \n", &nextToken);
+        token = strtok_r(NULL, " \n", &nextToken);
         count++;
     }
 

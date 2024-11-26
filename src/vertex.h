@@ -14,4 +14,4 @@ void bindVBO(unsigned int VBOId);
 
 unsigned int createVAO();
 void bindVAO(unsigned int VAOId);
-void setAttribVAO(unsigned int id, unsigned int size, unsigned int stride, const void* pointer);
+void setAttribVAO(unsigned int id, unsigned int size, unsigned int stride, size_t pointer);
