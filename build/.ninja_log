@@ -1,0 +1,6 @@
+# ninja log v6
+13	138	7543569012299206	CMakeFiles/GraphProject.dir/src/parser.c.obj	d11de4eacb16e6cb
+25	238	7543569012419232	CMakeFiles/GraphProject.dir/src/shader.c.obj	f5fe885e9e374084
+18	164	7543571695570052	CMakeFiles/GraphProject.dir/src/vertex.c.obj	6b0b6b1d61513d34
+23	213	7543574348336099	CMakeFiles/GraphProject.dir/src/main.c.obj	fa7c6a1ad143fe6e
+216	396	7543574350256536	GraphProject.exe	1b95194e8ab017b4
