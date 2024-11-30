@@ -13,6 +13,11 @@ struct Point{
 	float b;
 };
 
+struct Files{
+	char** paths;
+	int count;
+};
+
 struct Buffer {
 	char buffer[BUFFER_SIZE];
 	size_t bytes;
@@ -25,5 +30,5 @@ struct Buffer getBuffer(const char* filepath);
 
 struct Point* readFile(struct Buffer* b);
 
-//int getNumberOfPoints(int* )
+struct Files getAllFiles();
 

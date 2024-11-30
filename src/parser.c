@@ -1,6 +1,46 @@
 #include "parser.h"
 #include <string.h>
+#include <windows.h>
 
+
+struct Files getAllFiles(){
+	WIN32_FIND_DATA files;
+	HANDLE handle;
+
+	int count = 10;
+
+
+	const char* directory = "..\\graph_data";
+	char path[100];
+
+	sprintf(path, "%s\\*.*", directory);
+
+	if((handle = FindFirstFile(path, &files)) == INVALID_HANDLE_VALUE){
+		printf("Path not found");
+	}
+
+	char** graphFiles = (char**)malloc(sizeof(char*) * count);
+	for(int a = 0; a<count; a++){
+		graphFiles[a] = (char*)malloc(100 * sizeof(char));
+	}
+
+	int i = 0;
+	
+	while(FindNextFile(handle, &files)){
+		if(strcmp(files.cFileName, ".") == 0 || strcmp(files.cFileName, "..") == 0){
+			continue;
+		}
+		sprintf(path, "%s\\%s", directory, files.cFileName);
+
+		strcpy(graphFiles[i], path);
+		i++;
+	}
+
+	struct Files graphF;
+	graphF.paths = graphFiles;
+	graphF.count = i;
+	return graphF;
+}
 
 int openFile(const char* filepath) {
 	FILE* file = fopen(filepath, "rb");
@@ -44,7 +84,7 @@ struct Point* readFile(struct Buffer* b) {
     int count = 0;
     int idx = 0;
 
-	srand(time(NULL));
+	
 
 	float cr = (float)(rand() % 256) / 255.0f;
 	float cg = (float)(rand() % 256) / 255.0f;

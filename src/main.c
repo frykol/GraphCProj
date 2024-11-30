@@ -11,7 +11,7 @@
 #include "vertex.h"
 #include "shader.h"
 
-
+int elementsCount;
 struct Vertex* vertexes;
 
 GLFWwindow* initOpenGl() {
@@ -38,12 +38,10 @@ GLFWwindow* initOpenGl() {
 
     return window;
 }
+float largestX = 0;
+float largestY = 0;
 
-void normalizePoints(struct Point* points, int count) {
-    float largestX = 0;
-    float largestY = 0;
-    float offset = 1.05f;
-
+void findLargestPoints(struct Point* points, float count){
     for (int i = 0; i < count; i++) {
         if (fabs(points[i].x) > largestX) {
             largestX = (float)fabs(points[i].x);
@@ -53,6 +51,11 @@ void normalizePoints(struct Point* points, int count) {
         }
 
     }
+}
+
+void normalizePoints(struct Point* points, int count) {
+   
+    float offset = 1.05f;
     
 
     for (int i = 0; i < count; i++) {
@@ -64,6 +67,12 @@ void normalizePoints(struct Point* points, int count) {
 
 
 void setup() {
+
+    struct Files f = getAllFiles();
+    elementsCount = f.count + 1;
+    vertexes = (struct Vertex*)malloc(elementsCount * sizeof(struct Vertex));
+
+    srand(time(NULL));
     float plane[] = {
         -2.0f, 0.0f,1.0f,1.0f,1.0f,
         2.0f, 0.0f,1.0f,1.0f,1.0f,
@@ -85,26 +94,39 @@ void setup() {
     vertexes[0].VBO = planeVBO;
     vertexes[0].VertexCount = sizeof(plane)/sizeof(plane[0])/5;
 
-    const char* filepath = "../graph_data/test.txt";
-    struct Buffer b = getBuffer(filepath);
-    struct Point* points = readFile(&b);
-    
-    normalizePoints(points, b.numberOfPoints);
-    unsigned int pointVAO = createVAO();
-    bindVAO(pointVAO);
+    for(int i =0; i<f.count; i++){
+        struct Buffer b = getBuffer(f.paths[i]);
+        struct Point* points = readFile(&b);
+        findLargestPoints(points, b.numberOfPoints);
+        free(points);
+    }
 
-    unsigned int pointVBO = createVBO(b.numberOfPoints * sizeof(struct Point), points);
-    bindVBO(pointVBO);
-    setAttribVAO(0, 2, sizeof(struct Point), 0);
-    setAttribVAO(1, 3, sizeof(struct Point), 2 * sizeof(float));
-    bindVBO(0);
-    bindVAO(0);
+    for(int i =0; i<f.count; i++){
+        struct Buffer b = getBuffer(f.paths[i]);
+        struct Point* points = readFile(&b);
 
-    vertexes[1].VAO = pointVAO;
-    vertexes[1].VBO = pointVBO;
-    vertexes[1].VertexCount = b.numberOfPoints;
+        normalizePoints(points, b.numberOfPoints);
+        unsigned int pointVAO = createVAO();
+        bindVAO(pointVAO);
 
-    free(points);
+        unsigned int pointVBO = createVBO(b.numberOfPoints * sizeof(struct Point), points);
+        bindVBO(pointVBO);
+        setAttribVAO(0, 2, sizeof(struct Point), 0);
+        setAttribVAO(1, 3, sizeof(struct Point), 2 * sizeof(float));
+        bindVBO(0);
+        bindVAO(0);
+
+        vertexes[i+1].VAO = pointVAO;
+        vertexes[i+1].VBO = pointVBO;
+        vertexes[i+1].VertexCount = b.numberOfPoints;
+
+        free(points);
+    }
+
+    for(int i = 0; i< f.count; i++){
+        free(f.paths[i]);
+    }
+    free(f.paths);
 
     const char* vertexShaderSource = "#version 330 core\n"
         "layout (location = 0) in vec2 aPos;\n"
@@ -130,7 +152,7 @@ void setup() {
 }
 
 
-void render(GLFWwindow* window, int elementsCount) {
+void render(GLFWwindow* window) {
 
 
 
@@ -156,14 +178,13 @@ void render(GLFWwindow* window, int elementsCount) {
 int main(void)
 {
     GLFWwindow* window = initOpenGl();
-
-    int elementsCount = 2;
-    vertexes = (struct Vertex*)malloc(elementsCount * sizeof(struct Vertex));
-
     
+
+    getAllFiles();
+
     setup();
    
-    render(window, elementsCount);
+    render(window);
 
     free(vertexes);
 
