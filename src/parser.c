@@ -1,8 +1,13 @@
 #include "parser.h"
 #include <string.h>
+#ifdef _WIN32
 #include <windows.h>
+#endif
+#ifdef linux
+#include <dirent.h>
+#endif
 
-
+#ifdef _WIN32
 struct Files getAllFiles(){
 	WIN32_FIND_DATA files;
 	HANDLE handle;
@@ -41,6 +46,39 @@ struct Files getAllFiles(){
 	graphF.count = i;
 	return graphF;
 }
+#else
+struct Files getAllFiles(){
+	DIR *d;
+	struct dirent *dir;
+	const char* dir_path = "../graph_data";
+	d = opendir(dir_path);
+
+	char currentPath[100];
+
+	int count = 10;
+	
+
+	char** graphFiles = (char**)malloc(count * sizeof(char));
+	
+	int i = 0;
+	if(d){
+		while((dir = readdir(d)) != NULL){
+			if(strcmp(dir->d_name, ".") == 0 ||(strcmp(dir->d_name, "..") == 0)){
+				continue;
+				}
+			graphFiles[i] = (char*)malloc(sizeof(char) * 100);
+			sprintf(currentPath, "%s/%s",dir_path, dir->d_name);
+			strcpy(graphFiles[i], currentPath);
+			i++;
+		}
+		closedir(d);
+	}
+	struct Files graphF;
+	graphF.paths = graphFiles;
+	graphF.count = i;
+	return graphF;
+}
+#endif
 
 int openFile(const char* filepath) {
 	FILE* file = fopen(filepath, "rb");

@@ -59,15 +59,14 @@ void normalizePoints(struct Point* points, int count) {
     
 
     for (int i = 0; i < count; i++) {
-        points[i].x = points[i].x / (largestX * offset);
+      points[i].x = points[i].x / (largestX * offset);
         points[i].y = points[i].y / (largestY * offset);
 
     }
 }
 
 
-void setup() {
-
+void setup(){
     struct Files f = getAllFiles();
     elementsCount = f.count + 1;
     vertexes = (struct Vertex*)malloc(elementsCount * sizeof(struct Vertex));
@@ -178,9 +177,9 @@ void render(GLFWwindow* window) {
 int main(void)
 {
     GLFWwindow* window = initOpenGl();
-    
+	
 
-    getAllFiles();
+    //getAllFiles();
 
     setup();
    

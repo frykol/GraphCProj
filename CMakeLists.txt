@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.1)
 project("GraphProject")
 
+set(OpenGL_GL_PREFERENCE GLVND)
 if(UNIX)
 find_package(glfw3 3.3 REQUIRED)
 endif()
 find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
 
 set(CMAKE_C_VERSION 17)
 set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/parser.h ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex.h ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.h)
