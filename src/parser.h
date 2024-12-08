@@ -11,6 +11,8 @@ struct Point{
 	float r;
 	float g;
 	float b;
+	float texX;
+	float texY;
 };
 
 struct Files{

@@ -1,3 +1,3 @@
-/home/frykol/Pulpit/Graph/GraphCProj/build/CMakeFiles/GraphProject.dir
-/home/frykol/Pulpit/Graph/GraphCProj/build/CMakeFiles/edit_cache.dir
-/home/frykol/Pulpit/Graph/GraphCProj/build/CMakeFiles/rebuild_cache.dir
+C:/TestGCC/build/CMakeFiles/GraphProject.dir
+C:/TestGCC/build/CMakeFiles/edit_cache.dir
+C:/TestGCC/build/CMakeFiles/rebuild_cache.dir
