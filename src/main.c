@@ -13,12 +13,20 @@
 #include "shader.h"
 
 
+struct Glyph{
+    char character;
+    struct Vertex vertexInfo;
+};
 
 int elementsCount;
 struct Vertex* vertexes;
 int countScale = 20 * 2;
 struct Vertex* scales;
 struct Vertex* quadTex;
+
+struct Glyph* glyphs;
+
+
 
 unsigned int SP;
 
@@ -122,18 +130,22 @@ struct Point* createScales(){
     
     return points;
 }
-
-void testTex(){
-
-float vertices[] = {
-     -0.1f, 0.1f , 0.2f, 1.0f, 1.0f,   0.0f, 0.0f,  
-     -0.1f, -0.1f, 0.5f, 1.0f, 1.0f,   0.0f, 1.0f,  
-      0.1f, -0.1f, 1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-      
-    -0.1f ,  0.1f , 1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-    0.1f ,  -0.1f , 1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-    0.1f ,  0.1f , 1.0f, 1.0f, 1.0f,   1.0f, 0.0f 
-};
+void generateGlyphs(float width, float height){
+    int characterCount = 12;
+    const char charactersInTexture[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-'};
+    const float xScale = 1.0f;
+    const float yScale = 0.4f;
+    glyphs = (struct Glyph*)malloc(characterCount * sizeof(struct Glyph));
+    for(int i = 0; i<characterCount; i++){
+    float vertices[] = {
+        0.0/xScale, (0.0f + height) /yScale  , 0.2f, 1.0f, 1.0f,   (float)i/12.0f, 0.0f,  
+        0.0f/xScale, 0.0f/yScale, 0.5f, 1.0f, 1.0f,   (float)i/12.0f, 1.0f,  
+        (0.0f+width)/xScale, 0.0f/yScale, 1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 1.0f,
+        
+        0.0f/xScale ,  (0.0f+height)/yScale , 1.0f, 1.0f, 1.0f,   (float)i/12.0f, 0.0f,
+        (0.0f+width)/xScale,  0.f /yScale , 1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 1.0f,
+        (0.0f+width)/xScale,  (0.0f+height)/yScale , 1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 0.0f 
+    };
 
 
     unsigned int VAO = createVAO();
@@ -145,9 +157,19 @@ float vertices[] = {
     setAttribVAO(2, 2, 7* sizeof(float), 5*sizeof(float));
     bindVBO(0);
     bindVAO(0);
+    glyphs[i].character = charactersInTexture[i];
+    glyphs[i].vertexInfo.VAO = VAO;
+    glyphs[i].vertexInfo.VBO = VBO;
+    glyphs[i].vertexInfo.VertexCount = 6;
+    }
+}
+
+void testTex(){
+
+    
 
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("../textures/one.jpg", &width, &height, &nrChannels, 0); 
+    unsigned char *data = stbi_load("../textures/numbers.png", &width, &height, &nrChannels, 0); 
     glGenTextures(1, &testTexture);
     glBindTexture(GL_TEXTURE_2D,testTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
@@ -157,11 +179,7 @@ float vertices[] = {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     //glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
-    quadTex = (struct Vertex*)malloc(1 * sizeof(struct Vertex));
     
-    quadTex[0].VAO = VAO;
-    quadTex[0].VBO = VBO;
-    quadTex[0].VertexCount = 6;
 }
 
 
@@ -276,6 +294,7 @@ void setup(){
         "{\n"
         "   if(isTex != 0){\n"
         "   FragColor = texture(text, TexCoord);\n"
+        "   if(FragColor.x==0.0) discard;\n"
         "   }\n"
         "   else{ \n"
         "   FragColor = posCol;\n"
@@ -309,16 +328,18 @@ void render(GLFWwindow* window) {
             glDrawArrays(GL_LINES, 0, scales[i].VertexCount);
         }
         glBindTexture(GL_TEXTURE_2D, testTexture);
-        bindVAO(quadTex[0].VAO);
+        bindVAO(glyphs[11].vertexInfo.VAO);
+        glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
         glUniform1f(glGetUniformLocation(SP, "scalar"), 1.0f);
-        glUniform2f(glGetUniformLocation(SP, "offset"), 0.5f, 0.5f);
-        glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
-        glDrawArrays(GL_TRIANGLES, 0, quadTex[0].VertexCount);
-        glUniform1f(glGetUniformLocation(SP, "scalar"), 0.4f);
-        glUniform2f(glGetUniformLocation(SP, "offset"), 0.0f, 0.0f);
-        glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
-        glDrawArrays(GL_TRIANGLES, 0, quadTex[0].VertexCount);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glUniform2f(glGetUniformLocation(SP, "offset"), -0.5f, 0.5f);
+        
+        glDrawArrays(GL_TRIANGLES, 0, glyphs[11].vertexInfo.VertexCount);
+        bindVAO(glyphs[1].vertexInfo.VAO);
+        glUniform1f(glGetUniformLocation(SP, "scalar"), 1.0f);
+        glUniform2f(glGetUniformLocation(SP, "offset"), -0.4f, 0.5f);
+        
+        glDrawArrays(GL_TRIANGLES, 0, glyphs[2].vertexInfo.VertexCount);
+
         
         glfwSwapBuffers(window);
 
@@ -335,10 +356,12 @@ int main(void)
 
     setup();
     testTex();
+    generateGlyphs(0.1f,0.1f);
     render(window);
 
     free(vertexes);
-
+    free(scales);
+    free(glyphs);
     glfwTerminate();
     return 0;
 }
