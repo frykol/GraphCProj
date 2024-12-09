@@ -138,13 +138,13 @@ void generateGlyphs(float width, float height){
     glyphs = (struct Glyph*)malloc(characterCount * sizeof(struct Glyph));
     for(int i = 0; i<characterCount; i++){
     float vertices[] = {
-        0.0/xScale, (0.0f + height) /yScale  , 0.2f, 1.0f, 1.0f,   (float)i/12.0f, 0.0f,  
-        0.0f/xScale, 0.0f/yScale, 0.5f, 1.0f, 1.0f,   (float)i/12.0f, 1.0f,  
-        (0.0f+width)/xScale, 0.0f/yScale, 1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 1.0f,
+        0.0,          height/yScale,  0.2f, 1.0f, 1.0f,   (float)i/12.0f, 0.0f,  
+        0.0f,         0.0f,           0.5f, 1.0f, 1.0f,   (float)i/12.0f, 1.0f,  
+        width/xScale, 0.0f,           1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 1.0f,
         
-        0.0f/xScale ,  (0.0f+height)/yScale , 1.0f, 1.0f, 1.0f,   (float)i/12.0f, 0.0f,
-        (0.0f+width)/xScale,  0.f /yScale , 1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 1.0f,
-        (0.0f+width)/xScale,  (0.0f+height)/yScale , 1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 0.0f 
+        0.0f,         height/yScale,  1.0f, 1.0f, 1.0f,   (float)i/12.0f, 0.0f,
+        width/xScale, 0.0f,           1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 1.0f,
+        width/xScale, height/yScale,  1.0f, 1.0f, 1.0f,   (float)(i+1)/12.0f, 0.0f 
     };
 
 
@@ -182,6 +182,31 @@ void testTex(){
     
 }
 
+struct Vertex getVertexFromChar(char c){
+    for(int i = 0; i< 12; i++){
+        if(glyphs[i].character == c){
+            return glyphs[i].vertexInfo;
+        }
+    }
+}
+
+void renderText(const char* text, float offsetX, float offsetY, float scalar){
+    char* pt = &text[0];
+    float localOffsetX = 0;
+    float localOffsetY = 0;
+    while(*pt != '\0'){
+        char curC = *pt;
+        struct Vertex vertexChar = getVertexFromChar(curC);
+        glBindTexture(GL_TEXTURE_2D, testTexture);
+        bindVAO(vertexChar.VAO);
+        glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
+        glUniform1f(glGetUniformLocation(SP, "scalar"), scalar);
+        glUniform2f(glGetUniformLocation(SP, "offset"), offsetX+localOffsetX/2, offsetY);
+        glDrawArrays(GL_TRIANGLES, 0, vertexChar.VertexCount);
+        localOffsetX += 0.2f * scalar;
+        pt++;
+    }
+}
 
 void setup(){
     
@@ -327,26 +352,30 @@ void render(GLFWwindow* window) {
             glUniform1i(glGetUniformLocation(SP, "isTex"), 0);
             glDrawArrays(GL_LINES, 0, scales[i].VertexCount);
         }
-        glBindTexture(GL_TEXTURE_2D, testTexture);
-        bindVAO(glyphs[11].vertexInfo.VAO);
-        glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
-        glUniform1f(glGetUniformLocation(SP, "scalar"), 1.0f);
-        glUniform2f(glGetUniformLocation(SP, "offset"), -0.5f, 0.5f);
-        
-        glDrawArrays(GL_TRIANGLES, 0, glyphs[11].vertexInfo.VertexCount);
-        bindVAO(glyphs[1].vertexInfo.VAO);
-        glUniform1f(glGetUniformLocation(SP, "scalar"), 1.0f);
-        glUniform2f(glGetUniformLocation(SP, "offset"), -0.4f, 0.5f);
-        
-        glDrawArrays(GL_TRIANGLES, 0, glyphs[2].vertexInfo.VertexCount);
+        float largestToDisplay = largestX * -1;
+        for(float i = -1.0f; i<=1.1f; i+=0.2f){
+            char arrOf[20];
+            sprintf(arrOf, "%.2f", largestToDisplay);
+            if(i < -0.02f || i > 0.02f){
+                renderText(arrOf, (i/1.05f)-0.05f, -0.1f, 0.2f);
+            }
+            largestToDisplay += 0.2*largestX;
+        }
+        largestToDisplay = largestY * -1;
+        for(float i = -1.0f; i<=1.1f; i+=0.2f){
+            char arrOf[20];
+            sprintf(arrOf, "%.2f", largestToDisplay);
+            if(i < -0.02f || i > 0.02f){
+                renderText(arrOf, 0.05f, (i/1.05f)-0.02f, 0.2f);
+            }
+            largestToDisplay += 0.2*largestY;
+        }
 
-        
         glfwSwapBuffers(window);
 
         glfwPollEvents();
     }
 }
-
 
 
 int main(void)
