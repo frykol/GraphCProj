@@ -1,8 +1,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H  
+#define STB_IMAGE_IMPLEMENTATION
+#include "../stb/stb_image.h"
 
 #include <math.h>
 #include <string.h>
@@ -12,26 +12,17 @@
 #include "vertex.h"
 #include "shader.h"
 
+
+
 int elementsCount;
 struct Vertex* vertexes;
 int countScale = 20 * 2;
 struct Vertex* scales;
-
-struct Vertex* texts;
-
-int glyphsCount = 128;
-struct Character {
-    unsigned int id;
-    int width;
-    int height;
-    int offsetX;
-    int offsetY;
-    unsigned int advance; 
-};
+struct Vertex* quadTex;
 
 unsigned int SP;
 
-struct Character* characters;
+unsigned int testTexture;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
@@ -132,105 +123,47 @@ struct Point* createScales(){
     return points;
 }
 
-void setupFont(){
+void testTex(){
 
-    FT_Library ft;
-    if (FT_Init_FreeType(&ft))
-    {
-        printf("ERROR::FREETYPE: Could not init FreeType Library");
-        return;
-    }
-
-    FT_Face face;
-    if (FT_New_Face(ft, "../fonts/Arial.ttf", 0, &face)) {
-        printf("ERROR::FREETYPE: Failed to load font");
-        return;
-    }
-    FT_Set_Pixel_Sizes(face, 0, 48);
+float vertices[] = {
+     -0.1f, 0.1f , 0.2f, 1.0f, 1.0f,   0.0f, 0.0f,  
+     -0.1f, -0.1f, 0.5f, 1.0f, 1.0f,   0.0f, 1.0f,  
+      0.1f, -0.1f, 1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
+      
+    -0.1f ,  0.1f , 1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
+    0.1f ,  -0.1f , 1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
+    0.1f ,  0.1f , 1.0f, 1.0f, 1.0f,   1.0f, 0.0f 
+};
 
 
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        
+    unsigned int VAO = createVAO();
+    bindVAO(VAO);
+    unsigned int VBO = createVBO(sizeof(float) * 7 * 6, vertices);
+    bindVBO(VBO);
+    setAttribVAO(0, 2, 7 * sizeof(float), 0);
+    setAttribVAO(1, 3, 7 * sizeof(float), 2*sizeof(float));
+    setAttribVAO(2, 2, 7* sizeof(float), 5*sizeof(float));
+    bindVBO(0);
+    bindVAO(0);
 
-        characters = (struct Character*)malloc(sizeof(struct Character) * glyphsCount);
-        for (unsigned char c = 0; c < glyphsCount; c++)
-        {
-
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-            {
-                printf("ERROR::FREETYTPE: Failed to load Glyph");
-                continue;
-            }
-
-            unsigned int texture;
-            glGenTextures(1, &texture);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-            );
-
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            characters[c].id = texture;
-            characters[c].height = face->glyph->bitmap.width;
-            characters[c].width = face->glyph->bitmap.rows;
-            characters[c].offsetX = face->glyph->bitmap_left;
-            characters[c].offsetY = face->glyph->bitmap_top;
-            characters[c].advance = (unsigned int)(face->glyph->advance.x);
-        }
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-        FT_Done_Face(face);
-        FT_Done_FreeType(ft);
-
-        glActiveTexture(GL_TEXTURE0);
-        struct Character c = characters[50];
-        float scale = 0.2f;
-        float xpos = 0 + c.offsetX * scale;
-        float ypos = -2.0 - (c.height - c.offsetY) * scale;
-        printf("%f, %f \n", xpos, ypos);
-        printf("%d, %d \n", c.width, c.height);
-        printf("%d, %d \n", c.offsetX, c.offsetY);
-        float w = c.width * scale;
-        float h = c.height * scale;
-
-        float vertices[42] = {
-            xpos,     ypos + h,0.2f,0.2f,0.2f,   0.0f, 0.0f ,       
-             xpos,     ypos,0.2f,0.2f,0.2f,       0.0f, 1.0f ,
-            xpos + w, ypos,0.2f,0.2f,0.2f,       1.0f, 1.0f ,
-
-            xpos,     ypos + h,0.2f,0.2f,0.2f,    0.0f, 0.0f ,
-             xpos + w, ypos,0.2f,0.2f,0.2f,        1.0f, 1.0f ,
-             xpos + w, ypos + h,0.2f,0.2f,0.2f,    1.0f, 0.0f           
-        };
-        
-        unsigned int tv = createVAO();
-        bindVAO(tv);
-        glBindTexture(GL_TEXTURE_2D, c.id);
-        unsigned int tb = createVBO(sizeof(float) * 42, vertices);
-        bindVBO(tb);
-        setAttribVAO(0, 2, 7 * sizeof(float), 0);
-        setAttribVAO(1, 3, 7 * sizeof(float), 2*sizeof(float));
-        setAttribVAO(2, 2, 7 * sizeof(float), 3*sizeof(float));
-        bindVBO(0);
-        bindVAO(0);
-
-        texts = (struct Vertex*)malloc(1 * sizeof(struct Vertex));
-        texts[0].VAO = tv;
-        texts[0].VBO = tb;
-        texts[0].VertexCount = 6;
-
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("../textures/one.jpg", &width, &height, &nrChannels, 0); 
+    glGenTextures(1, &testTexture);
+    glBindTexture(GL_TEXTURE_2D,testTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    //glGenerateMipmap(GL_TEXTURE_2D);
+    stbi_image_free(data);
+    quadTex = (struct Vertex*)malloc(1 * sizeof(struct Vertex));
+    
+    quadTex[0].VAO = VAO;
+    quadTex[0].VBO = VBO;
+    quadTex[0].VertexCount = 6;
 }
+
 
 void setup(){
     
@@ -322,13 +255,15 @@ void setup(){
         "layout (location = 0) in vec2 aPos;\n"
         "layout (location = 1) in vec3 aCol; \n"
         "layout (location = 2) in vec2 tex; \n"
+        "uniform float scalar; \n"
+        "uniform vec2 offset; \n"
         "out vec4 posCol;\n"
         "out vec2 TexCoord; \n"
         "void main()\n"
         "{\n"
         "   TexCoord = tex; \n"
         "   posCol = vec4(aCol, 1.0); \n"
-        "   gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);\n"
+        "   gl_Position = vec4((aPos.x*scalar)+offset.x, (aPos.y*scalar)+offset.y, 0.0, 1.0);\n"
         "}\0";
 
     const char* fragmentShaderSource = "#version 330 core\n"
@@ -340,8 +275,7 @@ void setup(){
         "void main()\n"
         "{\n"
         "   if(isTex != 0){\n"
-        "   vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoord).r); \n"
-        "   FragColor = posCol * sampled;\n"
+        "   FragColor = texture(text, TexCoord);\n"
         "   }\n"
         "   else{ \n"
         "   FragColor = posCol;\n"
@@ -359,7 +293,8 @@ void render(GLFWwindow* window) {
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
-        
+        glUniform1f(glGetUniformLocation(SP, "scalar"), 1.0f);
+        glUniform2f(glGetUniformLocation(SP, "offset"), 0.0f, 0.0f);
         for (int i = 0; i < elementsCount; i++) {
             bindVAO(vertexes[i].VAO);
             glUniform1i(glGetUniformLocation(SP, "isTex"), 0);
@@ -373,13 +308,17 @@ void render(GLFWwindow* window) {
             glUniform1i(glGetUniformLocation(SP, "isTex"), 0);
             glDrawArrays(GL_LINES, 0, scales[i].VertexCount);
         }
-        for(int i = 0; i < 1; i++){
-            bindVAO(texts[i].VAO);
-            bindVBO(texts[i].VBO);
-            glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
-            glDrawArrays(GL_TRIANGLES, 0, texts[i].VertexCount);
-        }
-        
+        glBindTexture(GL_TEXTURE_2D, testTexture);
+        bindVAO(quadTex[0].VAO);
+        glUniform1f(glGetUniformLocation(SP, "scalar"), 1.0f);
+        glUniform2f(glGetUniformLocation(SP, "offset"), 0.5f, 0.5f);
+        glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
+        glDrawArrays(GL_TRIANGLES, 0, quadTex[0].VertexCount);
+        glUniform1f(glGetUniformLocation(SP, "scalar"), 0.4f);
+        glUniform2f(glGetUniformLocation(SP, "offset"), 0.0f, 0.0f);
+        glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
+        glDrawArrays(GL_TRIANGLES, 0, quadTex[0].VertexCount);
+        glBindTexture(GL_TEXTURE_2D, 0);
         
         glfwSwapBuffers(window);
 
@@ -395,7 +334,7 @@ int main(void)
 	
 
     setup();
-   setupFont();
+    testTex();
     render(window);
 
     free(vertexes);
