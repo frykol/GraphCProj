@@ -1,8 +1,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../stb/stb_image.h"
+
 
 #include <math.h>
 #include <string.h>
@@ -11,12 +10,12 @@
 #include "parser.h"
 #include "vertex.h"
 #include "shader.h"
+#include "texture.h"
+
+#include "renderer.h"
 
 
-struct Glyph{
-    char character;
-    struct Vertex vertexInfo;
-};
+
 
 int elementsCount;
 struct Vertex* vertexes;
@@ -164,49 +163,6 @@ void generateGlyphs(float width, float height){
     }
 }
 
-void testTex(){
-
-    
-
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load("../textures/numbers.png", &width, &height, &nrChannels, 0); 
-    glGenTextures(1, &testTexture);
-    glBindTexture(GL_TEXTURE_2D,testTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    //glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(data);
-    
-}
-
-struct Vertex getVertexFromChar(char c){
-    for(int i = 0; i< 12; i++){
-        if(glyphs[i].character == c){
-            return glyphs[i].vertexInfo;
-        }
-    }
-}
-
-void renderText(const char* text, float offsetX, float offsetY, float scalar){
-    char* pt = &text[0];
-    float localOffsetX = 0;
-    float localOffsetY = 0;
-    while(*pt != '\0'){
-        char curC = *pt;
-        struct Vertex vertexChar = getVertexFromChar(curC);
-        glBindTexture(GL_TEXTURE_2D, testTexture);
-        bindVAO(vertexChar.VAO);
-        glUniform1i(glGetUniformLocation(SP, "isTex"), 1);
-        glUniform1f(glGetUniformLocation(SP, "scalar"), scalar);
-        glUniform2f(glGetUniformLocation(SP, "offset"), offsetX+localOffsetX/2, offsetY);
-        glDrawArrays(GL_TRIANGLES, 0, vertexChar.VertexCount);
-        localOffsetX += 0.2f * scalar;
-        pt++;
-    }
-}
 
 void setup(){
     
@@ -329,6 +285,8 @@ void setup(){
     SP = createShader(vertexShaderSource, fragmentShaderSource);
     bindShader(SP);
     
+
+    testTexture = createTexture("../textures/numbers.png");
 }
 
 
@@ -336,38 +294,22 @@ void render(GLFWwindow* window) {
 
     while (!glfwWindowShouldClose(window))
     {
-        glClear(GL_COLOR_BUFFER_BIT);
-        glUniform1f(glGetUniformLocation(SP, "scalar"), 1.0f);
-        glUniform2f(glGetUniformLocation(SP, "offset"), 0.0f, 0.0f);
-        for (int i = 0; i < elementsCount; i++) {
-            bindVAO(vertexes[i].VAO);
-            glUniform1i(glGetUniformLocation(SP, "isTex"), 0);
-            glDrawArrays(GL_LINE_STRIP, 0, vertexes[i].VertexCount);
-            
-
-        }
+       glClear(GL_COLOR_BUFFER_BIT);
+       for(int i = 0; i<elementsCount; i++){
+            renderObject(GL_LINE_STRIP, vertexes[i].VAO, SP, vertexes[i].VertexCount, 0, 0.0f,0.0f,1.0f);
+       }
 
         for(int i = 0; i < 1; i++){
-            bindVAO(scales[i].VAO);
-            glUniform1i(glGetUniformLocation(SP, "isTex"), 0);
-            glDrawArrays(GL_LINES, 0, scales[i].VertexCount);
+            renderObject(GL_LINES, scales[i].VAO, SP, scales[i].VertexCount, 0, 0.0f,0.0f,1.0f);
         }
         float largestToDisplay = largestX * -1;
         for(float i = -1.0f; i<=1.1f; i+=0.2f){
-            char arrOf[20];
-            sprintf(arrOf, "%.2f", largestToDisplay);
-            if(i < -0.02f || i > 0.02f){
-                renderText(arrOf, (i/1.05f)-0.05f, -0.1f, 0.2f);
-            }
+            renderTextFromFloat(testTexture,SP,largestToDisplay, (i/1.05f)-0.05f, -0.1f, 0.2f,i, glyphs);
             largestToDisplay += 0.2*largestX;
         }
         largestToDisplay = largestY * -1;
         for(float i = -1.0f; i<=1.1f; i+=0.2f){
-            char arrOf[20];
-            sprintf(arrOf, "%.2f", largestToDisplay);
-            if(i < -0.02f || i > 0.02f){
-                renderText(arrOf, 0.05f, (i/1.05f)-0.02f, 0.2f);
-            }
+            renderTextFromFloat(testTexture,SP,largestToDisplay, 0.05f, (i/1.05f)-0.02f, 0.2f,i, glyphs);
             largestToDisplay += 0.2*largestY;
         }
 
@@ -384,7 +326,6 @@ int main(void)
 	
 
     setup();
-    testTex();
     generateGlyphs(0.1f,0.1f);
     render(window);
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.12)
 project("GraphProject")
 
 set(OpenGL_GL_PREFERENCE GLVND)
@@ -9,10 +9,14 @@ endif()
 find_package(OpenGL REQUIRED)
 
 set(CMAKE_C_VERSION 17)
-set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/parser.h ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex.h ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.h ${CMAKE_CURRENT_SOURCE_DIR}/stb/stb_image.h)
-set(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c ${CMAKE_CURRENT_SOURCE_DIR}/src/parser.c ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex.c ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.c)
+#set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/parser.h ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex.h ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.h ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer.h ${CMAKE_CURRENT_SOURCE_DIR}/stb/stb_image.h)
+#set(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c ${CMAKE_CURRENT_SOURCE_DIR}/src/parser.c ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex.c ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.c ${CMAKE_CURRENT_SOURCE_DIR}/src/renderer.c)
 
-
+file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
+file(GLOB HEADERS2 "${CMAKE_CURRENT_SOURCE_DIR}/stb/*.h")
+list (APPEND HEADERS ${HEADERS2}) 
+file(GLOB SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
+list (APPEND HEADERS ${SOURCE2}) 
 add_executable(${PROJECT_NAME} ${SOURCE} ${HEADERS})
 add_definitions(-DGLEW_STATIC)
 

@@ -10,7 +10,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/frykol/Pulpit/Graph/GraphCProj/src/main.c" "CMakeFiles/GraphProject.dir/src/main.c.o" "gcc" "CMakeFiles/GraphProject.dir/src/main.c.o.d"
   "/home/frykol/Pulpit/Graph/GraphCProj/src/parser.c" "CMakeFiles/GraphProject.dir/src/parser.c.o" "gcc" "CMakeFiles/GraphProject.dir/src/parser.c.o.d"
+  "/home/frykol/Pulpit/Graph/GraphCProj/src/renderer.c" "CMakeFiles/GraphProject.dir/src/renderer.c.o" "gcc" "CMakeFiles/GraphProject.dir/src/renderer.c.o.d"
   "/home/frykol/Pulpit/Graph/GraphCProj/src/shader.c" "CMakeFiles/GraphProject.dir/src/shader.c.o" "gcc" "CMakeFiles/GraphProject.dir/src/shader.c.o.d"
+  "/home/frykol/Pulpit/Graph/GraphCProj/src/texture.c" "CMakeFiles/GraphProject.dir/src/texture.c.o" "gcc" "CMakeFiles/GraphProject.dir/src/texture.c.o.d"
   "/home/frykol/Pulpit/Graph/GraphCProj/src/vertex.c" "CMakeFiles/GraphProject.dir/src/vertex.c.o" "gcc" "CMakeFiles/GraphProject.dir/src/vertex.c.o.d"
   )
 

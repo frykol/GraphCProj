@@ -81,12 +81,12 @@ clean: CMakeFiles/GraphProject.dir/clean
 CMakeFiles/GraphProject.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/frykol/Pulpit/Graph/GraphCProj/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target GraphProject"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/frykol/Pulpit/Graph/GraphCProj/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target GraphProject"
 .PHONY : CMakeFiles/GraphProject.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/GraphProject.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/frykol/Pulpit/Graph/GraphCProj/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/frykol/Pulpit/Graph/GraphCProj/build/CMakeFiles 7
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/GraphProject.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/frykol/Pulpit/Graph/GraphCProj/build/CMakeFiles 0
 .PHONY : CMakeFiles/GraphProject.dir/rule

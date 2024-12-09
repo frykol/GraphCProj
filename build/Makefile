@@ -177,6 +177,30 @@ src/parser.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/src/parser.c.s
 .PHONY : src/parser.c.s
 
+src/renderer.o: src/renderer.c.o
+.PHONY : src/renderer.o
+
+# target to build an object file
+src/renderer.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/src/renderer.c.o
+.PHONY : src/renderer.c.o
+
+src/renderer.i: src/renderer.c.i
+.PHONY : src/renderer.i
+
+# target to preprocess a source file
+src/renderer.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/src/renderer.c.i
+.PHONY : src/renderer.c.i
+
+src/renderer.s: src/renderer.c.s
+.PHONY : src/renderer.s
+
+# target to generate assembly for a file
+src/renderer.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/src/renderer.c.s
+.PHONY : src/renderer.c.s
+
 src/shader.o: src/shader.c.o
 .PHONY : src/shader.o
 
@@ -200,6 +224,30 @@ src/shader.s: src/shader.c.s
 src/shader.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/src/shader.c.s
 .PHONY : src/shader.c.s
+
+src/texture.o: src/texture.c.o
+.PHONY : src/texture.o
+
+# target to build an object file
+src/texture.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/src/texture.c.o
+.PHONY : src/texture.c.o
+
+src/texture.i: src/texture.c.i
+.PHONY : src/texture.i
+
+# target to preprocess a source file
+src/texture.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/src/texture.c.i
+.PHONY : src/texture.c.i
+
+src/texture.s: src/texture.c.s
+.PHONY : src/texture.s
+
+# target to generate assembly for a file
+src/texture.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GraphProject.dir/build.make CMakeFiles/GraphProject.dir/src/texture.c.s
+.PHONY : src/texture.c.s
 
 src/vertex.o: src/vertex.c.o
 .PHONY : src/vertex.o
@@ -240,9 +288,15 @@ help:
 	@echo "... src/parser.o"
 	@echo "... src/parser.i"
 	@echo "... src/parser.s"
+	@echo "... src/renderer.o"
+	@echo "... src/renderer.i"
+	@echo "... src/renderer.s"
 	@echo "... src/shader.o"
 	@echo "... src/shader.i"
 	@echo "... src/shader.s"
+	@echo "... src/texture.o"
+	@echo "... src/texture.i"
+	@echo "... src/texture.s"
 	@echo "... src/vertex.o"
 	@echo "... src/vertex.i"
 	@echo "... src/vertex.s"

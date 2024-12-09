@@ -1,0 +1,38 @@
+[
+{
+  "directory": "/home/frykol/Pulpit/Graph/GraphCProj/build",
+  "command": "/usr/bin/gcc -DGLEW_STATIC -I/home/frykol/Pulpit/Graph/GraphCProj/glfw/include -I/home/frykol/Pulpit/Graph/GraphCProj/glew/include -I/home/frykol/Pulpit/Graph/GraphCProj/freetype/include -I/home/frykol/Pulpit/Graph/GraphCProj/stb -I/home/frykol/Pulpit/Graph/GraphCProj/src -g -o CMakeFiles/GraphProject.dir/src/main.c.o -c /home/frykol/Pulpit/Graph/GraphCProj/src/main.c",
+  "file": "/home/frykol/Pulpit/Graph/GraphCProj/src/main.c",
+  "output": "CMakeFiles/GraphProject.dir/src/main.c.o"
+},
+{
+  "directory": "/home/frykol/Pulpit/Graph/GraphCProj/build",
+  "command": "/usr/bin/gcc -DGLEW_STATIC -I/home/frykol/Pulpit/Graph/GraphCProj/glfw/include -I/home/frykol/Pulpit/Graph/GraphCProj/glew/include -I/home/frykol/Pulpit/Graph/GraphCProj/freetype/include -I/home/frykol/Pulpit/Graph/GraphCProj/stb -I/home/frykol/Pulpit/Graph/GraphCProj/src -g -o CMakeFiles/GraphProject.dir/src/parser.c.o -c /home/frykol/Pulpit/Graph/GraphCProj/src/parser.c",
+  "file": "/home/frykol/Pulpit/Graph/GraphCProj/src/parser.c",
+  "output": "CMakeFiles/GraphProject.dir/src/parser.c.o"
+},
+{
+  "directory": "/home/frykol/Pulpit/Graph/GraphCProj/build",
+  "command": "/usr/bin/gcc -DGLEW_STATIC -I/home/frykol/Pulpit/Graph/GraphCProj/glfw/include -I/home/frykol/Pulpit/Graph/GraphCProj/glew/include -I/home/frykol/Pulpit/Graph/GraphCProj/freetype/include -I/home/frykol/Pulpit/Graph/GraphCProj/stb -I/home/frykol/Pulpit/Graph/GraphCProj/src -g -o CMakeFiles/GraphProject.dir/src/renderer.c.o -c /home/frykol/Pulpit/Graph/GraphCProj/src/renderer.c",
+  "file": "/home/frykol/Pulpit/Graph/GraphCProj/src/renderer.c",
+  "output": "CMakeFiles/GraphProject.dir/src/renderer.c.o"
+},
+{
+  "directory": "/home/frykol/Pulpit/Graph/GraphCProj/build",
+  "command": "/usr/bin/gcc -DGLEW_STATIC -I/home/frykol/Pulpit/Graph/GraphCProj/glfw/include -I/home/frykol/Pulpit/Graph/GraphCProj/glew/include -I/home/frykol/Pulpit/Graph/GraphCProj/freetype/include -I/home/frykol/Pulpit/Graph/GraphCProj/stb -I/home/frykol/Pulpit/Graph/GraphCProj/src -g -o CMakeFiles/GraphProject.dir/src/shader.c.o -c /home/frykol/Pulpit/Graph/GraphCProj/src/shader.c",
+  "file": "/home/frykol/Pulpit/Graph/GraphCProj/src/shader.c",
+  "output": "CMakeFiles/GraphProject.dir/src/shader.c.o"
+},
+{
+  "directory": "/home/frykol/Pulpit/Graph/GraphCProj/build",
+  "command": "/usr/bin/gcc -DGLEW_STATIC -I/home/frykol/Pulpit/Graph/GraphCProj/glfw/include -I/home/frykol/Pulpit/Graph/GraphCProj/glew/include -I/home/frykol/Pulpit/Graph/GraphCProj/freetype/include -I/home/frykol/Pulpit/Graph/GraphCProj/stb -I/home/frykol/Pulpit/Graph/GraphCProj/src -g -o CMakeFiles/GraphProject.dir/src/texture.c.o -c /home/frykol/Pulpit/Graph/GraphCProj/src/texture.c",
+  "file": "/home/frykol/Pulpit/Graph/GraphCProj/src/texture.c",
+  "output": "CMakeFiles/GraphProject.dir/src/texture.c.o"
+},
+{
+  "directory": "/home/frykol/Pulpit/Graph/GraphCProj/build",
+  "command": "/usr/bin/gcc -DGLEW_STATIC -I/home/frykol/Pulpit/Graph/GraphCProj/glfw/include -I/home/frykol/Pulpit/Graph/GraphCProj/glew/include -I/home/frykol/Pulpit/Graph/GraphCProj/freetype/include -I/home/frykol/Pulpit/Graph/GraphCProj/stb -I/home/frykol/Pulpit/Graph/GraphCProj/src -g -o CMakeFiles/GraphProject.dir/src/vertex.c.o -c /home/frykol/Pulpit/Graph/GraphCProj/src/vertex.c",
+  "file": "/home/frykol/Pulpit/Graph/GraphCProj/src/vertex.c",
+  "output": "CMakeFiles/GraphProject.dir/src/vertex.c.o"
+}
+]
